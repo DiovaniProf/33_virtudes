@@ -89,6 +89,25 @@
       const names=[...new Set(entries.map(x=>x.virtue).filter(Boolean))];
       names.forEach(name=>{const x=refForName(name);body+=h(name,2);if(x){body+=p(`[PLATAFORMA] Frase-chave: ${x.key}`)+p(`Pergunta: ${x.virtue.question}`)+p(`Prática de referência: ${x.virtue.practice}`)+p(`Trecho breve: ${x.quote.text}`,'Quote')+cite(`Eduardo Casarotto. Guia das Virtudes — Livro do Professor (2024), p. ${x.quote.page}.`)}else body+=p('Virtude registrada sem referência local correspondente.');});
     } else body+=p('Nenhum roteiro de virtude salvo ainda. A complementação permanece em aberto até o professor registrar uma mediação.');
+    const integrations=[...(state.curriculumIntegrations||[])].sort(byTime);
+    body+=h('Integrações curriculares registradas e aprovadas',2);
+    if(integrations.length){
+      body+=table(['ETAPA','AULA / FONTE','VIRTUDES'],integrations.map((x,i)=>[
+        `${String(i+1).padStart(2,'0')} · ${x.date||'Sem data'}`,
+        `${x.title||x.topic||'Sem título'}\n${x.fileName||'Texto do professor'}`,
+        listString(x.virtues)
+      ]));
+      integrations.forEach((x,i)=>{
+        body+=h(`Complementação ${String(i+1).padStart(2,'0')} · ${x.date||'sem data'}`,2);
+        body+=pairs([['Conteúdo da aula [PROFESSOR]',x.topic||x.title],['Arquivo utilizado [PROFESSOR]',x.fileName||'Texto inserido manualmente'],['Virtudes selecionadas [PROFESSOR]',listString(x.virtues)],['Origem dos objetivos','Modelos pedagógicos predefinidos, revisados e aprovados pelo professor']]);
+        body+=h('Objetivos complementares aprovados',2);
+        (x.objectives||[]).forEach((o,j)=>{body+=p(`${j+1}. [PROPOSTA APROVADA] ${o.virtue}: ${o.text}`)});
+        if(x.question)body+=p(`Questão problematizadora [PROPOSTA]: ${x.question}`);
+        if(x.activity)body+=p(`Atividade [PROPOSTA]: ${x.activity}`);
+        if(x.sourceExcerpt)body+=p(`Trecho de referência do arquivo [EXTRATO DO TEXTO]: ${x.sourceExcerpt.slice(0,450)}`,'Source');
+        body+=p('Validar adequação à turma, tempo disponível e habilidades do currículo. Esta complementação não altera os objetivos curriculares originais.','Source');
+      });
+    } else body+=p('Nenhuma integração curricular aprovada foi salva até esta exportação.');
     body+=section(3,'Sequência didática sugerida para adaptação')+h('Três encontros articulados ao currículo');
     body+=table(['ETAPA','INTENÇÃO E MEDIAÇÃO','EVIDÊNCIA ESPERADA'],[
       ['01 · Sensibilização',`Introduzir ${curr.title||'o conteúdo curricular'}; levantamento de ideias e pergunta mobilizadora. ${recent.question?'Questão registrada: '+recent.question:''}`,'Ideias prévias e perguntas iniciais'],

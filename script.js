@@ -128,6 +128,98 @@ function suggest(id){const matching=MOVIES.filter(f=>f.virtues.includes(id)).map
 function wheel(){const v=wheelResult?V[wheelResult-1]:null;screen.innerHTML=head('Roda das Virtudes','Sorteie uma virtude e converse a partir de uma situação reflexiva.')+`<div class="layout-row"><div class="panel center"><div class="eyebrow">Sorteio de reflexão</div><div class="wheel-circle" id="wheelCircle"><span>${v?escapeHtml(v.name):'33 Virtudes'}</span></div><div class="button-row" style="justify-content:center"><button id="drawWheel" class="btn gold">⟳ Girar a roda</button><button id="resetWheel" class="btn subtle">Limpar</button></div><p class="note">O sorteio é aleatório. Nenhuma resposta pessoal será enviada a servidores.</p></div><div class="panel"><div class="eyebrow">Diálogo orientado</div>${v?`<h3>${escapeHtml(v.name)}</h3><p>${v.desc}</p><h4>Questão norteadora</h4><div class="reflection">${v.question}</div><h4>Desafio cotidiano</h4><p>${v.practice}</p><div class="button-row"><button class="btn" data-virtue="${v.id}">Estudar esta virtude</button><button class="btn" id="wheelDiary">Registrar reflexão</button></div>`:`<h3>Uma pergunta, muitas possibilidades</h3><p>Acione a roda para selecionar uma das 33 virtudes. Em seguida, conduza o debate individualmente ou em grupo.</p><ol class="practice-list"><li>Ouça diferentes pontos de vista.</li><li>Peça exemplos concretos.</li><li>Investigue consequências das decisões.</li><li>Construa um encaminhamento possível.</li></ol>`}</div></div>`}
 function cinema(){const f=MOVIES[activeFilm];screen.innerHTML=head('Cinema das Escolhas','Filmes, dilemas e perguntas originais para aprofundar o estudo.')+`<div class="film-grid">${MOVIES.map((f,i)=>`<article class="panel film-card"><div class="film-cover">${f.symbol}</div><h3>${escapeHtml(f.name)}</h3><div class="tag">${f.year}</div><p>${escapeHtml(f.desc)}</p><button class="btn ${i===activeFilm?'gold':''}" data-film="${i}">Explorar filme</button></article>`).join('')}</div><article class="panel"><div class="eyebrow">Roteiro de discussão · ${f.year}</div><h3>${escapeHtml(f.name)}</h3><p>${f.desc}</p><h4>Virtudes para observar</h4><div>${f.virtues.map(id=>`<button class="btn subtle" data-virtue="${id}" style="margin:4px">${V[id-1].name}</button>`).join('')}</div><h4>Pergunta de aprofundamento</h4><div class="reflection">${f.q}</div><label for="filmNote">Sua interpretação</label><textarea id="filmNote" placeholder="Que escolhas dos personagens merecem ser debatidas?"></textarea><div class="button-row"><button class="btn gold" id="saveFilm">Salvar reflexão no diário</button></div><p class="note">As obras são recomendações culturais, não vídeos incluídos no sistema. Exibições devem respeitar licenças e classificação indicativa.</p></article>`}
 function diary(){const entries=state.diary.filter(e=>diaryFilter==='Todas'||e.virtue===diaryFilter).slice().reverse();screen.innerHTML=head('Diário das Virtudes','Um espaço privado para pensar sobre experiências e aprendizagens.')+`<div class="layout-row"><section class="panel"><h3>Novo registro</h3><label for="diaryVirtue">Virtude relacionada</label><select id="diaryVirtue" class="field">${V.map(v=>`<option ${v.id===currentVirtue?'selected':''}>${v.name}</option>`).join('')}</select><label for="diaryEvent">O que aconteceu?</label><textarea id="diaryEvent" placeholder="Descreva uma situação ou experiência..."></textarea><label for="diaryFeel">O que senti e compreendi?</label><textarea id="diaryFeel" placeholder="O que você percebeu sobre si e sobre os outros?"></textarea><label for="diaryAction">O que pretendo fazer a partir disso?</label><textarea id="diaryAction" placeholder="Uma escolha, uma atitude, uma nova pergunta..."></textarea><div class="button-row"><button class="btn gold" id="saveDiary">Salvar registro</button><button class="btn subtle" id="clearDiary">Limpar campos</button></div></section><section class="panel"><h3>Meus registros <span class="tag">${state.diary.length}</span></h3><label for="diaryFilter">Filtrar</label><select id="diaryFilter" class="field"><option>Todas</option>${V.map(v=>`<option ${diaryFilter===v.name?'selected':''}>${v.name}</option>`).join('')}</select>${entries.length?entries.map(e=>`<article class="diary-entry"><time>${escapeHtml(e.date)} · ${escapeHtml(e.virtue)}</time><p>${escapeHtml(e.event)}</p><p class="note">Sentir/compreender: ${escapeHtml(e.feel)}</p><p class="note">Próxima ação: ${escapeHtml(e.action)}</p><button class="btn subtle" data-delete-entry="${e.id}">Excluir este registro</button></article>`).join(''):'<p class="empty">Ainda não há registros para este filtro. Suas anotações aparecerão aqui.</p>'}</section></div><p class="note">Atenção: não insira dados íntimos ou informações de terceiros em computadores compartilhados. Estes registros permanecem no armazenamento deste navegador até serem apagados.</p>`}
+// Etapa 02 — Assistente Curricular local, sem IA generativa e sem modificar o currículo original.
+let assistDraft={fileName:'',format:'',size:0,pages:null,slides:null,readAt:null,rawText:'',title:'',topic:'',strategy:'auto',selectedIds:[],objectives:[],question:'',activity:'',suggestedIds:[],confidence:0,themes:[],existingObjectives:[],error:'',progress:'',truncated:false};
+function assEsc(s){return escapeHtml(s)}
+function curriculumAssistantPanel(){
+ const d=assistDraft,history=state.curriculumIntegrations||[];
+ const noSource=!d.rawText.trim();
+ const options=V.map(v=>`<label class="assist-voption ${d.selectedIds.includes(v.id)?'checked':''}"><input type="checkbox" data-assist-virtue="${v.id}" ${d.selectedIds.includes(v.id)?'checked':''}><span>${assEsc(v.name)}</span></label>`).join('');
+ const objectives=d.objectives.length?d.objectives.map((o,i)=>`<article class="assist-objective-card"><div class="assist-objective-head"><strong>${String(i+1).padStart(2,'0')} · ${assEsc(V[o.virtueId-1]?.name||'Virtude')}</strong><label class="assist-approval"><input type="checkbox" data-assist-approve="${i}" ${o.approved?'checked':''}> Aprovar</label></div><label for="assist_objective_${i}" class="assist-muted">Objetivo complementar, editável</label><textarea id="assist_objective_${i}" data-assist-objective="${i}" rows="3">${assEsc(o.text)}</textarea></article>`).join(''):'<p class="assist-muted">Após escolher as virtudes, clique em “Gerar objetivos complementares”.</p>';
+ const countApproved=d.objectives.filter(x=>x.approved&&x.text.trim()).length;
+ return `<section class="panel curriculum-assistant" id="curriculumAssistant" aria-labelledby="curriculumAssistTitle">
+  <div class="curriculum-header"><div><div class="eyebrow">02 · INTEGRAÇÃO CURRICULAR E VIRTUDES · OPCIONAL</div><h3 id="curriculumAssistTitle">Sua aula em diálogo com as 33 virtudes</h3><p>Importe um material e construa objetivos complementares. O currículo informado acima permanece inalterado; apenas sugestões aprovadas entram na sequência didática.</p></div><span class="curriculum-label">REVISÃO DOCENTE</span></div>
+  <div class="assist-steps"><span>01 · Material</span><span>02 · Virtudes</span><span>03 · Objetivos</span><span>04 · Salvar</span></div>
+  <div class="assist-upload-zone" id="assistDropZone"><span class="assist-upload-icon" aria-hidden="true">⇧</span><label for="assistFile">Selecionar ou arrastar material da aula</label><input id="assistFile" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation"><small>PDF, DOCX ou PPTX · até 20 MB · análise no navegador</small>${d.fileName?`<p class="assist-file-name">Arquivo: <b>${assEsc(d.fileName)}</b> · ${assEsc(d.format||'')}${d.pages?' · '+d.pages+' página(s)':''}${d.slides?' · '+d.slides+' slide(s)':''}</p>`:''}</div>
+  <p class="assist-status" id="assistStatus" role="status">${assEsc(d.progress||d.error||'Também é possível colar um texto curricular diretamente no campo de revisão. Os arquivos originais não ficam armazenados.')}</p>
+  <details class="assist-source-editor" ${d.rawText?'open':''}><summary>Texto extraído / revisão do professor</summary>
+   <p class="assist-muted">Confira e corrija o texto. A identificação de conceitos é temática e pode falhar em materiais complexos. PDF digitalizado requer texto selecionável ou transcrição manual.</p>
+   <textarea id="assistText" rows="6" placeholder="Texto da aula extraído do arquivo, ou cole aqui seu material curricular...">${assEsc(d.rawText)}</textarea>
+   <div class="assist-info-cols"><label>Título ou tema da aula<input id="assistTitle" type="text" class="field" value="${assEsc(d.title)}" placeholder="Ex.: Direitos indígenas na Constituição de 1988"></label><label>Conteúdo central para os objetivos<input id="assistTopic" type="text" class="field" value="${assEsc(d.topic)}" placeholder="Ex.: direitos fundamentais e cidadania"></label></div>
+   <div class="button-row"><button class="btn subtle" id="assistAnalyze" type="button">Identificar temas na aula</button><button class="btn subtle" id="assistUseCurriculum" type="button">Usar texto do núcleo curricular</button></div>
+  </details>
+  ${d.existingObjectives.length?`<div class="assist-extracted"><strong>Objetivos identificados no material ou no currículo</strong><p>Excertos identificados por padrões de texto, sujeitos à conferência do professor:</p><ul>${d.existingObjectives.map(x=>`<li>${assEsc(x)}</li>`).join('')}</ul></div>`:''}
+  <div class="assist-section-divider"></div>
+  <div class="assist-subhead"><div><div class="eyebrow">ETAPA 02-A</div><h4>Quais virtudes dialogam com esta aula?</h4><p>Selecione até três virtudes. O sistema pode propor uma relação por temas; o professor sempre pode modificar a seleção.</p></div></div>
+  <div class="assist-methods"><label class="assist-method ${d.strategy==='auto'?'chosen':''}"><input type="radio" name="assistStrategy" value="auto" ${d.strategy==='auto'?'checked':''}> Sugestões por correspondência temática</label><label class="assist-method ${d.strategy==='manual'?'chosen':''}"><input type="radio" name="assistStrategy" value="manual" ${d.strategy==='manual'?'checked':''}> Escolher manualmente</label></div>
+  <div class="button-row"><button class="btn gold" id="assistSuggest" type="button">Sugerir virtudes para a aula</button><span class="assist-counter">${d.selectedIds.length}/3 selecionadas</span></div>
+  ${d.themes.length?`<p class="assist-rationale"><b>Temas identificados:</b> ${d.themes.map(assEsc).join(' · ')}. ${d.confidence>0?'Correspondência por palavras-chave; não é interpretação semântica de IA.':'A associação temática é preliminar.'}</p>`:''}
+  <details class="assist-virtue-details" ${d.strategy==='manual'?'open':''}><summary>Explorar e selecionar entre as 33 virtudes</summary><div class="assist-virtues">${options}</div></details>
+  <div class="assist-picked">${d.selectedIds.map(id=>`<span class="assist-pill">${assEsc(V[id-1].name)} <button type="button" data-assist-remove="${id}" aria-label="Retirar ${assEsc(V[id-1].name)}">×</button></span>`).join('')||'<span class="assist-muted">Selecione uma, duas ou três virtudes.</span>'}</div>
+  <div class="assist-section-divider"></div>
+  <div class="assist-subhead"><div><div class="eyebrow">ETAPA 02-B</div><h4>Objetivos de aprendizagem complementares</h4><p>Modelos didáticos predefinidos com verbos observáveis. Revise a pertinência de cada objetivo antes de aprová-lo.</p></div><button class="btn gold" id="assistGenerate" type="button" ${!d.selectedIds.length?'disabled':''}>Gerar objetivos ↓</button></div>
+  <div class="assist-objective-grid">${objectives}</div>
+  ${d.objectives.length?`<div class="assist-guide-grid"><label>Pergunta problematizadora<textarea id="assistQuestion" rows="3">${assEsc(d.question)}</textarea></label><label>Proposta de atividade<textarea id="assistActivity" rows="4">${assEsc(d.activity)}</textarea></label></div>`:''}
+  <div class="assist-final-row"><div><strong>${countApproved} objetivo(s) aprovado(s)</strong><p class="assist-muted">O documento importado não é guardado integralmente. Salva-se apenas identificação, síntese curricular e propostas aprovadas.</p></div><button class="btn gold" id="assistSave" type="button" ${!countApproved?'disabled':''}>Salvar complementação curricular</button></div>
+  <div class="assist-history"><div class="record-heading"><h4>Integrações salvas <span class="tag">${history.length}</span></h4><button class="btn subtle" data-export-docx-inline="teacher" type="button">Baixar sequência didática DOCX ↓</button></div>${history.length?history.slice().reverse().map((h,i)=>`<div class="assist-history-item"><div><small>${assEsc(h.date||'')}</small><b>${assEsc(h.title||h.topic||'Integração curricular')}</b><p>${assEsc(h.fileName||'Texto inserido pelo professor')} · ${assEsc((h.virtues||[]).join(' · '))}</p><small>${(h.objectives||[]).length} objetivo(s) aprovados · Registro ${history.length-i}</small></div><button type="button" class="btn subtle" data-assist-review="${assEsc(h.id)}">Rever</button></div>`).join(''):'<p class="assist-muted">Ainda não há integrações curriculares salvas.</p>'}</div>
+  <p class="assist-ethics">ⓘ Esta versão realiza extração de texto e correspondência temática; não usa IA externa, nem consulta arquivos do Drive. Para PDFs, a biblioteca PDF.js pode requerer acesso à internet. As habilidades BNCC não são inventadas automaticamente.</p>
+ </section>`;
+}
+function assistantGather(){
+ const d=assistDraft;
+ if(el('assistText'))d.rawText=el('assistText').value.slice(0,85000);
+ if(el('assistTitle'))d.title=el('assistTitle').value.trim().slice(0,180);
+ if(el('assistTopic'))d.topic=el('assistTopic').value.trim().slice(0,150);
+ if(el('assistQuestion'))d.question=el('assistQuestion').value.trim();
+ if(el('assistActivity'))d.activity=el('assistActivity').value.trim();
+ if(el('curriculumAssistant'))el('curriculumAssistant').querySelectorAll('[data-assist-objective]').forEach(ta=>{const item=d.objectives[+ta.dataset.assistObjective];if(item)item.text=ta.value.trim()});
+}
+function assistantRefresh(){const section=el('curriculumAssistant');if(section)section.outerHTML=curriculumAssistantPanel();}
+async function assistantImport(file){
+ if(!file)return;
+ assistantGather();const d=assistDraft;d.progress='Lendo arquivo selecionado…';d.error='';if(el('assistStatus'))el('assistStatus').textContent=d.progress;
+ try{
+   const data=await ImportadorAulas.readFile(file,msg=>{d.progress=msg;if(el('assistStatus'))el('assistStatus').textContent=msg});
+   d.fileName=data.name;d.format=data.format;d.size=data.size;d.pages=data.pages;d.slides=data.slides;d.readAt=data.readAt;d.truncated=data.truncated;
+   d.rawText=data.text;d.title='';d.topic='';d.selectedIds=[];d.objectives=[];d.question='';d.activity='';
+   const summary=ImportadorAulas.scanSummary(d.rawText,'');d.title=summary.title;d.topic=summary.topic;d.suggestedIds=summary.suggestedIds;d.themes=summary.matchedThemes;d.confidence=summary.topicScore;d.existingObjectives=summary.objectives;
+   d.progress=`Texto identificado: ${data.totalChars.toLocaleString('pt-BR')} caracteres.${data.truncated?' Prévia limitada a 85 mil caracteres.':''} Confira e corrija antes de gerar sugestões.`;
+   assistantRefresh();el('assistText')?.focus();toast('Material importado. Revise o texto e prossiga para selecionar as virtudes.');
+ }catch(err){d.fileName=file.name;d.error=err.message+' Você pode colar o texto na área de revisão.';d.progress='';assistantRefresh();toast('Não foi possível extrair o texto: revise o arquivo ou cole o conteúdo.');}
+}
+function assistantAnalyze(){assistantGather();const d=assistDraft;const original=readCurriculum();
+ const source=[d.rawText,original.contents,original.title,original.objectives].filter(Boolean).join('\n');
+ if(!source.trim()){toast('Informe um conteúdo curricular ou importe uma aula primeiro.');return false;}
+ const summary=ImportadorAulas.scanSummary(source,d.title||original.title||'');
+ d.title=d.title||summary.title;d.topic=el('assistTopic')?.value.trim()||summary.topic;
+ if(!d.topic||d.topic==='Conteúdo curricular informado')d.topic=original.title||summary.topic;
+ d.suggestedIds=summary.suggestedIds;d.themes=summary.matchedThemes;d.confidence=summary.topicScore;d.existingObjectives=summary.objectives;
+ d.progress=`Conteúdos identificados para revisão docente. ${summary.objectives.length?'Possíveis objetivos detectados no texto: '+summary.objectives.length+'.':''}`;
+ return true;
+}
+function assistantSuggest(){if(!assistantAnalyze())return;
+ const d=assistDraft;if(!d.suggestedIds.length){d.selectedIds=[];d.error='Não foi identificada uma relação temática suficientemente específica. Selecione virtudes manualmente.';}
+ else{d.selectedIds=d.suggestedIds.slice(0,3);d.error='';}
+ d.objectives=[];assistantRefresh();toast(d.selectedIds.length?'Virtudes relacionadas identificadas; confirme a pertinência.':'Selecione até três virtudes manualmente.');
+}
+function assistantGenerate(){assistantGather();const d=assistDraft;if(!d.selectedIds.length){toast('Selecione uma a três virtudes.');return}
+ if(!d.topic){const c=readCurriculum();d.topic=c.title||c.contents?.slice(0,120)||d.title||'';}
+ if(!d.topic){toast('Informe ou confirme o conteúdo central da aula.');return}
+ d.objectives=d.selectedIds.map((virtueId,i)=>({virtueId,text:ImportadorAulas.objectiveFor(virtueId,d.topic,i),approved:false}));
+ d.question=ImportadorAulas.questionFor(d.topic,d.selectedIds.map(id=>V[id-1].name));
+ d.activity=ImportadorAulas.activityFor(d.topic,d.selectedIds.map(id=>V[id-1].name));
+ assistantRefresh();el('assist_objective_0')?.focus();toast('Objetivos gerados. Edite e aprove as propostas que deseja salvar.');
+}
+function assistantSave(){assistantGather();const d=assistDraft;
+ const approved=d.objectives.filter(o=>o.approved&&o.text.trim());if(!approved.length){toast('Aprove ao menos um objetivo antes de salvar.');return}
+ const curr=readCurriculum();recordCurriculumSnapshot();
+ const now=new Date();const info={id:now.getTime().toString(36)+Math.random().toString(36).slice(2,6),createdAt:now.toISOString(),date:now.toLocaleString('pt-BR'),title:d.title||curr.title,topic:d.topic,fileName:d.fileName||'',format:d.format||'Texto do professor',pages:d.pages,slides:d.slides,sourceExcerpt:d.rawText.slice(0,900),virtues:d.selectedIds.map(id=>V[id-1].name),objectives:approved.map(o=>({virtue:V[o.virtueId-1].name,text:o.text,status:'aprovado pelo professor'})),question:d.question,activity:d.activity,themes:d.themes,method:'Modelos pedagógicos predefinidos (sem IA)',curriculum:{...curr}};
+ state.curriculumIntegrations??=[];state.curriculumIntegrations.push(info);save();assistantRefresh();toast('Complementação curricular salva no histórico. Já pode gerar o DOCX docente.');
+}
+function assistantRevisit(id){assistantGather();const item=(state.curriculumIntegrations||[]).find(i=>i.id===id);if(!item)return;
+ assistDraft={...assistDraft,fileName:item.fileName,format:item.format,rawText:item.sourceExcerpt||'',title:item.title||'',topic:item.topic||'',strategy:'manual',selectedIds:(item.virtues||[]).map(n=>V.find(v=>v.name===n)?.id).filter(Boolean),objectives:(item.objectives||[]).map(x=>({virtueId:V.find(v=>v.name===x.virtue)?.id||0,text:x.text,approved:true})).filter(x=>x.virtueId),question:item.question||'',activity:item.activity||'',themes:item.themes||[],existingObjectives:[],error:'Revisão carregada. Ao salvar, será criada uma nova versão, preservando a original.',progress:''};
+ assistantRefresh();el('curriculumAssistant')?.scrollIntoView({behavior:'smooth',block:'start'});toast('Integração carregada para nova revisão.');
+}
 function bridgeGuide(){
  const picker=el('bridgeVirtue'); if(!picker) return;
  const v=V.find(v=>String(v.id)===picker.value)||V[0];
@@ -146,6 +238,7 @@ function bridge(){
  <section class="panel curriculum-panel"><div class="curriculum-header"><div><div class="eyebrow">01 · NÚCLEO CURRICULAR DO PROFESSOR</div><h3>Currículo em primeiro plano</h3><p>Este conteúdo pertence ao professor. Os encaminhamentos sobre as virtudes entram apenas como complemento, sem substituir o currículo.</p></div><span class="curriculum-label">AUTORIA DOCENTE</span></div>
  <div class="curriculum-fields">${TEACHER_FIELDS.map(([key,label])=>`<div class="curr-field ${['contents','objectives','skills','source'].includes(key)?'wide':''}"><label for="curr_${key}">${label}</label>${['contents','objectives','skills'].includes(key)?`<textarea id="curr_${key}" class="curr-textarea" placeholder="Registrar ou manter em branco...">${escapeHtml((state.teacherCurriculum||{})[key]||'')}</textarea>`:`<input id="curr_${key}" class="field" type="text" value="${escapeHtml((state.teacherCurriculum||{})[key]||'')}" placeholder="Preenchimento do professor">`}</div>`).join('')}</div>
  <div class="button-row"><button class="btn gold" id="saveTeacherCurriculum">Salvar núcleo curricular</button><button class="btn" data-export-docx-inline="teacher">Baixar sequência didática · DOCX ↓</button></div><p class="note">O núcleo curricular será mantido como uma seção própria na exportação. Os roteiros de mediação também são registrados cronologicamente.</p></section>
+ ${curriculumAssistantPanel()}
  <section class="bridge-picker panel" aria-label="Escolher uma das 33 virtudes">
   <div class="bridge-picker-intro"><div class="eyebrow">ESTUDO E PLANEJAMENTO</div><h3>Qual virtude orientará meu próximo diálogo?</h3><p>Consulte os subsídios abaixo, faça anotações e organize um roteiro para utilizar posteriormente em aula.</p></div>
   <div class="bridge-picker-controls"><label for="bridgeVirtue">Selecionar uma das 33 virtudes</label>
@@ -283,6 +376,17 @@ function recordCurriculumSnapshot(){
 function saveCurriculum(){const changed=recordCurriculumSnapshot();toast(changed?'Nova revisão curricular preservada no histórico.':'Núcleo curricular salvo, sem alteração de conteúdo.');}
 function doDocx(kind){try{if(!window.VirtudesDocx)throw new Error('O módulo de exportação DOCX não foi carregado.');if(kind==='teacher'&&el('curr_title'))recordCurriculumSnapshot();window.VirtudesDocx.download(kind,state);toast('Documento DOCX criado com os registros salvos.')}catch(err){toast(err.message);console.warn('Falha na exportação:',err)}}
 function doClick(e){
+ if(e.target.id==='assistSuggest'){assistantSuggest();return}
+ if(e.target.id==='assistAnalyze'){if(assistantAnalyze())assistantRefresh();return}
+ if(e.target.id==='assistUseCurriculum'){
+   assistantGather();const c=readCurriculum();const combined=[c.title,c.contents,c.objectives].filter(Boolean).join('\n');
+   if(!combined){toast('Preencha o núcleo curricular para utilizar seu texto.');return}
+   assistDraft.rawText=combined;assistDraft.fileName='';assistDraft.format='Texto curricular';assistDraft.title=c.title||'';assistDraft.topic=c.title||'';assistantRefresh();assistantAnalyze();assistantRefresh();toast('Núcleo curricular colocado na revisão, sem alterar o texto original.');return
+ }
+ if(e.target.id==='assistGenerate'){assistantGenerate();return}
+ if(e.target.id==='assistSave'){assistantSave();return}
+ const removeA=e.target.closest('[data-assist-remove]');if(removeA){assistantGather();const id=+removeA.dataset.assistRemove;assistDraft.selectedIds=assistDraft.selectedIds.filter(x=>x!==id);assistDraft.objectives=[];assistantRefresh();return}
+ const reviewA=e.target.closest('[data-assist-review]');if(reviewA){assistantRevisit(reviewA.dataset.assistReview);return}
  if(e.target.id==='saveTeacherCurriculum'){saveCurriculum();return}
  if(e.target.dataset.exportDocxInline==='teacher'){doDocx('teacher');return}
  if(e.target.id==='exportPersonalDocx'){doDocx('personal');return}
@@ -310,7 +414,19 @@ function doClick(e){
  toast('Exemplo de planejamento inserido para adaptação.');return;
  }if(e.target.id==='saveBridge'){const facts=el('bridgeFacts').value.trim(),views=el('bridgeViews').value.trim(),question=el('bridgeQuestion').value.trim(),action=el('bridgeAction').value.trim(),summary=el('bridgeTeacherNote').value.trim(),followUp=el('bridgeFollowUp').value.trim();if(!facts||!views||!question||!action){toast('Preencha os campos principais do roteiro do professor.');return}recordCurriculumSnapshot();state.mediation.push({id:Date.now().toString(36),createdAt:new Date().toISOString(),date:new Date().toLocaleString('pt-BR'),virtue:(V[+el('bridgeVirtue').value-1]?.name||el('bridgeVirtue').value),facts,views,question,action,summary,followUp,curriculum:{...state.teacherCurriculum}});save();bridge();toast('Nova etapa docente salva; currículo e registros anteriores preservados.')}}
 screen.addEventListener('click',doClick);
-screen.addEventListener('change',e=>{if(e.target.id==='bridgeVirtue'){bridgeGuide()}if(e.target.id==='groupFilter'){groupFilter=e.target.value;library(el('virtueSearch')?.value||'')}if(e.target.id==='diaryFilter'){diaryFilter=e.target.value;diary()}});
+screen.addEventListener('change',async e=>{
+ if(e.target.id==='assistFile'){await assistantImport(e.target.files[0]);return}
+ if(e.target.name==='assistStrategy'){assistantGather();assistDraft.strategy=e.target.value;assistantRefresh();return}
+ const vx=e.target.closest('[data-assist-virtue]');if(vx){assistantGather();const id=+vx.dataset.assistVirtue;
+   if(vx.checked&&!assistDraft.selectedIds.includes(id)){
+     if(assistDraft.selectedIds.length>=3){vx.checked=false;toast('Selecione no máximo três virtudes.');return}assistDraft.selectedIds.push(id)
+   }else if(!vx.checked)assistDraft.selectedIds=assistDraft.selectedIds.filter(x=>x!==id);
+   assistDraft.objectives=[];assistantRefresh();return}
+ const approval=e.target.closest('[data-assist-approve]');if(approval){assistantGather();const item=assistDraft.objectives[+approval.dataset.assistApprove];if(item)item.approved=approval.checked;assistantRefresh();return}
+if(e.target.id==='bridgeVirtue'){bridgeGuide()}if(e.target.id==='groupFilter'){groupFilter=e.target.value;library(el('virtueSearch')?.value||'')}if(e.target.id==='diaryFilter'){diaryFilter=e.target.value;diary()}});
+screen.addEventListener('dragover',e=>{if(e.target.closest('#assistDropZone')){e.preventDefault();e.target.closest('#assistDropZone').classList.add('dragging')}});
+screen.addEventListener('dragleave',e=>{if(e.target.closest('#assistDropZone'))e.target.closest('#assistDropZone').classList.remove('dragging')});
+screen.addEventListener('drop',e=>{const zone=e.target.closest('#assistDropZone');if(zone){e.preventDefault();zone.classList.remove('dragging');const file=e.dataTransfer?.files?.[0];if(file)assistantImport(file)}});
 screen.addEventListener('input',e=>{if(e.target.id==='virtueSearch'){const pos=e.target.selectionStart;const val=e.target.value;library(val);const input=el('virtueSearch');input.focus();input.setSelectionRange(pos,pos)}});
 document.querySelectorAll('.sidebar [data-go]').forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.go)));
 el('themeToggle').addEventListener('click',()=>{document.body.classList.toggle('light');theme=document.body.classList.contains('light')?'light':'dark';localStorage.setItem('jornadaTheme',theme);toast(theme==='light'?'Estética clara ativada.':'Estética noturna ativada.')});

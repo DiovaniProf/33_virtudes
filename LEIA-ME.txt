@@ -1,0 +1,47 @@
+JORNADA DAS 33 VIRTUDES — VERSÃO 8.0
+==================================
+
+COMO ABRIR
+- Abra index.html no navegador (ou utilize o HTML único fornecido à parte).
+- Na abertura, clique em INICIAR e escolha Professor–Mediador.
+- Acesse Ponte de Mediação > Currículo em Primeiro Plano.
+- Role até a nova seção “Integração Curricular e Virtudes”.
+
+ASSISTENTE CURRICULAR
+1. Importe uma aula .docx, .pptx ou .pdf (até 20 MB), ou cole o texto.
+2. Confira e corrija o texto lido no campo de revisão.
+3. Confirme o tema central do planejamento.
+4. Solicite sugestões ou selecione manualmente até 3 virtudes.
+5. Gere e revise objetivos; marque explicitamente os aprovados.
+6. Salve a complementação. Ela entra no histórico e no relatório DOCX docente.
+
+CAPACIDADES E LIMITAÇÕES
+- DOCX/PPTX: leitura no próprio navegador, sem envio a serviços externos.
+- PDF: utiliza PDF.js carregado via CDN quando houver internet; PDFs digitalizados
+  sem camada de texto precisarão ser transcritos. Caso a biblioteca não possa ser
+  carregada, cole o texto no campo de revisão.
+- As recomendações usam correspondências temáticas e modelos predefinidos.
+  NÃO há IA generativa nem análise semântica profunda de documentos.
+- Nenhuma habilidade da BNCC é inventada; o currículo original continua
+  registrado em seção separada.
+- Os documentos importados NÃO são enviados a um servidor nem gravados
+  integralmente no armazenamento do navegador. Só metadados, um pequeno
+  extrato e os objetivos aprovados são salvos, para documentação do percurso.
+- Os registros ficam no armazenamento local do navegador; em computadores
+  compartilhados evite dados sensíveis. Faça backup JSON pela Central de Documentos.
+- O relatório Word é gerado sem conexão, a partir das experiências salvas.
+
+ARQUIVOS
+- index.html — página principal
+- style.css — identidade visual premium
+- script.js — navegação e registros
+- importador-aulas.js — leitura local e propostas pedagógicas
+- vendor/jszip.min.js — leitura de DOCX/PPTX (biblioteca JSZip, licença MIT)
+- docx-export.js — gerador DOCX editável
+- assets/ — imagens da plataforma
+- modelos/ — modelos de referência DOCX
+
+CRÉDITOS
+Referência didática: Eduardo Casarotto, Guia das Virtudes — Livro do Professor
+(2024). As frases-chave, perguntas e objetivos complementares são formulações
+pedagógicas da plataforma e não transcrições integrais da obra.
