@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071629">
+<title>Jornada das 33 Virtudes · Laboratório de Estudos</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" aria-label="Navegação principal">
+    <button class="brand" data-go="home" aria-label="Início">✧</button>
+    <nav id="sidebarNav">
+      <button class="nav-btn active" data-go="home" title="Início"><span>⌂</span><small>Início</small></button>
+      <button class="nav-btn" data-go="library" title="Biblioteca"><span>▤</span><small>Biblioteca</small></button>
+      <button class="nav-btn" data-go="wheel" title="Roda"><span>⟳</span><small>Roda</small></button>
+      <button class="nav-btn" data-go="cinema" title="Cinema"><span>▷</span><small>Cinema</small></button>
+      <button class="nav-btn" data-go="diary" title="Diário"><span>✎</span><small>Diário</small></button>
+      <button class="nav-btn" data-go="bridge" title="Mediação"><span>◇</span><small>Ponte</small></button>
+      <button class="nav-btn" data-go="progress" title="Evolução"><span>▥</span><small>Painel</small></button>
+    </nav>
+    <button id="themeToggle" class="theme-icon" title="Alternar estética" aria-label="Alternar estética">☼</button>
+  </aside>
+  <main class="main" id="main">
+    <header class="topbar">
+      <div class="breadcrumb"><span>LABORATÓRIO DE ESTUDOS</span> <b> / </b><strong id="currentPage">Início</strong></div>
+      <div class="top-actions">
+        <button class="circle-btn" id="searchToggle" title="Pesquisar virtude" aria-label="Pesquisar virtude">⌕</button>
+        <button class="circle-btn" id="exportBtn" title="Exportar meus registros" aria-label="Exportar meus registros">⇩</button>
+        <button class="circle-btn" id="helpBtn" title="Como usar" aria-label="Como usar">?</button>
+      </div>
+    </header>
+    <div id="searchArea" class="search-area hidden"><input id="globalSearch" placeholder="Pesquisar entre as 33 virtudes…" autocomplete="off" aria-label="Pesquisar virtude"><button class="btn subtle" id="searchClose">Fechar</button></div>
+    <section id="screen" aria-live="polite"></section>
+    <footer class="footer">JORNADA DAS 33 VIRTUDES <span>•</span> Protótipo pedagógico independente inspirado nos temas do Guia das Virtudes, de Eduardo Casarotto. Textos e atividades desta tela são originais.</footer>
+  </main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<dialog id="helpDialog"><div class="dialog-body"><button id="closeHelp" class="dialog-close" aria-label="Fechar">×</button><h2>Como explorar a plataforma</h2><p>Comece pela Biblioteca, escolha uma virtude e estude as ideias e perguntas. Use a Roda para sortear uma reflexão, o Cinema para analisar escolhas, o Diário para registrar experiências e a Ponte para organizar mediações.</p><p>Seus registros ficam <b>somente neste navegador</b>, usando armazenamento local. O Painel apresenta participação nas atividades, não uma nota sobre seu caráter. Para salvar uma cópia, use o botão ⇩ no topo.</p><p>Esta é uma experiência educativa, não um instrumento de diagnóstico psicológico.</p><button class="btn gold" id="closeHelp2">Entendi</button></div></dialog>
+<script src="script.js"></script>
+</body>
+</html>
