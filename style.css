@@ -96,3 +96,120 @@ body.journey-started .welcome{display:none}
 @media(max-width:700px){.welcome-image{background-position:62% center}.welcome-tint{background:linear-gradient(90deg,#061529d9 0%,#071b32bc 65%,#071b3250 100%)}.welcome-content{width:calc(100% - 46px);margin-left:23px;padding:60px 0}.welcome h1{font-size:clamp(43px,9vw,62px)}.welcome-eyebrow{font-size:10px;line-height:1.6}.welcome p{font-size:19px}.welcome-actions{align-items:stretch;flex-direction:column;max-width:350px}.welcome-understand{min-height:48px}.mode-dock{padding:14px}.mode-dock-actions{width:100%}.mode-dock button{flex:1}.hero{min-height:210px;background-position:57% calc(50% + var(--hero-parallax,0px))}.info-switch{font-size:10px;padding:6px 8px}.top-actions{flex-wrap:nowrap}.mode-switch{max-width:110px;white-space:normal;font-size:9px;line-height:1.2}.circle-btn{width:31px;height:34px;font-size:18px;flex-shrink:0}}
 @media(max-width:430px){.top-actions .info-switch{max-width:76px;white-space:normal}.breadcrumb span{display:none}}
 @media(prefers-reduced-motion:reduce){.welcome-content{animation:none}.welcome-start{transition:none}.hero{background-position:center center!important}html{scroll-behavior:auto}}
+
+/* v6 — escolha múltipla e roteiro de estudo integrado */
+.personal-selection-head{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}.personal-selection-head h3{margin:8px 0}.personal-selection-head p{max-width:850px}
+.selected-count{border:1px solid #947544;background:#293d51;color:var(--gold);padding:9px 12px;border-radius:30px;font-weight:800;font-size:12px;white-space:nowrap}
+.candidate-multi{position:relative;min-width:0;width:100%;min-height:236px;overflow-wrap:anywhere}.candidate-multi.selected{border-width:2px}.candidate-marker{display:grid;place-items:center;border:1px solid var(--gold);border-radius:7px;min-width:25px;height:25px;color:var(--gold);font-size:16px;float:right}.candidate.selected .candidate-marker{background:var(--gold);color:#162b45}
+.personal-picker{display:flex;align-items:end;gap:12px;flex-wrap:wrap;border:1px solid #48637c;padding:16px;border-radius:13px;background:#0e2540;margin:12px 0}.personal-picker>div{flex:1 1 245px}.personal-picker select{max-width:none;min-width:185px;flex:2 1 240px}.personal-picker .btn{height:44px}
+.selection-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 21px}.selection-tools .btn{font-size:14px;padding:15px 20px}
+.personal-study-head{overflow-wrap:anywhere}.personal-study-head .personal-source-prompt{background:#0a203b99;padding:13px 16px;border-left:3px solid #edc775;border-radius:4px;margin:13px 0 12px}.personal-study-head p{line-height:1.65}.integration-plus{font-family:Arial,sans-serif;font-weight:400;color:var(--gold);font-size:.7em;margin:0 4px}
+.integrated-question{border-color:#ad8448;background:linear-gradient(95deg,#17314d,#1d3c59)}.integrated-question h3{font:600 clamp(19px,2vw,27px)/1.4 Georgia,serif;margin:12px 0 18px}.personal-timeline{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.personal-timeline span{border-top:2px solid #bc985e;padding-top:9px;font-size:11px;color:#efdaac;letter-spacing:.4px}
+.integrated-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:stretch;margin-bottom:4px}.integrated-step{display:flex;flex-direction:column;min-width:0;height:auto}.integrated-step h3{color:var(--text);font-size:25px;line-height:1.28;min-height:32px;margin:8px 0 12px}.integrated-step .integrated-why{margin:0 0 18px;font-size:14px;color:#f3dbab;line-height:1.58;min-height:95px}.integrated-inner{border-top:1px solid #49627f;margin-top:auto;padding-top:2px}.integrated-inner h4{margin:19px 0 5px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}.integrated-inner p{line-height:1.62;margin:0 0 8px;overflow-wrap:anywhere}.integrated-inner blockquote{font-size:16px;overflow-wrap:anywhere}.integrated-inner .citation-mini{font-size:11px;color:#c0d0e5}.integrated-synthesis{display:flex;align-items:flex-start;justify-content:space-between;flex-direction:column;gap:12px;border-color:#b48d50}.integrated-synthesis h3{font-size:24px;margin:9px 0}.integrated-synthesis p{max-width:1100px}
+/* Alinhamento e quebra de texto para a Ponte e os demais cartões */
+.bridge-reflect-grid,.bridge-work-grid,.personal-study-grid{align-items:stretch;min-width:0}.bridge-reflect-card,.bridge-formpanel{min-width:0;overflow-wrap:anywhere}.bridge-reflect-card{display:flex;flex-direction:column}.bridge-reflect-card .btn{align-self:flex-start;margin-top:auto}.bridge-reflect-card p{flex:1}.bridge-work-grid>*,.bridge-reflect-grid>*,.personal-candidates>*{min-width:0}.bridge-formpanel textarea{max-width:100%}
+.light .personal-picker{background:#eef3f8}.light .selected-count{background:#f0e5d1;color:#654a1d}.light .personal-study-head .personal-source-prompt{background:#e5edf7;color:#29435c}.light .integrated-question{background:#f1f4f9}.light .integrated-question h3{color:#253c55}.light .personal-timeline span{color:#765726}.light .integrated-step .integrated-why{color:#725522}.light .integrated-inner .citation-mini{color:#586c81}
+@media(max-width:1100px){.integrated-grid{grid-template-columns:1fr 1fr}.integrated-step .integrated-why{min-height:0}}
+@media(max-width:720px){.integrated-grid,.personal-timeline{grid-template-columns:1fr}.personal-picker{align-items:stretch}.personal-picker .btn{width:100%}.candidate-multi{min-height:180px}.integrated-step .integrated-why{min-height:0}}
+@media print{.welcome,.sidebar,.topbar,.footer,.button-row,.selection-tools,.personal-intro,.personal-candidates,.personal-picker,.personal-notebook,.personal-history{display:none!important}.app{display:block!important}.main{width:100%;max-width:none}body{background:white;color:black}.integrated-grid{grid-template-columns:1fr 1fr 1fr}.integrated-step{break-inside:avoid}}
+
+.chosen-virtues{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0 15px;font-size:12px;color:var(--muted)}.chosen-chip{border-radius:20px;background:#253d59;border:1px solid #b08d54;color:#f4dbab;padding:6px 11px;font-weight:700;font-size:12px}.chosen-chip span{padding-left:5px;font-size:17px}.chosen-chip:hover{background:#3f526a}.light .chosen-chip{background:#f4e2c5;color:#67451a}
+
+/* v7 · Identidade editorial premium: institucional, legível, com dourado fosco */
+:root{
+ --bg:#0a1521;--side:#0c1a29;--panel:#172a3b;--panel2:#21384b;
+ --stroke:#3b5062;--text:#f2f1ed;--muted:#b9c4cb;--gold:#ccb182;
+ --gold2:#a88e61;--deep:#132334;--radius:16px;--shadow:0 14px 36px #00000028;
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans','Segoe UI',Arial,sans-serif;letter-spacing:.04px}
+.main{max-width:1780px;padding-inline:clamp(18px,2.7vw,48px)}
+.sidebar{background:#0a1828;border-right-color:#273b4e}.brand{color:var(--gold)}
+.topbar{border-bottom-color:#314659}.breadcrumb{letter-spacing:1.4px;color:#c6ad81}
+.circle-btn,.info-switch{border-color:#415365;background:#122335;color:#dfe7eb;transition:border-color .2s,background .2s}
+.circle-btn:hover,.info-switch:hover{background:#1b3145}
+.hero{border-bottom-color:#455465}.hero h1{letter-spacing:-1.5px}.hero p{color:#d9e0e7}
+.eyebrow,.bridge-mini-title{color:#d4b683;letter-spacing:1.8px;font-weight:750;font-size:10.5px}
+.page-heading h2{font-size:clamp(26px,2.8vw,38px);letter-spacing:-.4px}
+.page-heading{padding-top:9px;margin-bottom:22px}
+.panel,.module-card,.resource-card,.virtue-card,.candidate,.personal-history-entry,
+.bridge-key,.bridge-book,.bridge-reflect-card{background:#182c40;border:1px solid #415668;box-shadow:0 5px 22px #00000012;border-radius:16px}
+.panel{padding:clamp(19px,1.75vw,28px);margin-bottom:20px}
+.panel p{color:#d8dfe3;line-height:1.65}
+.module-card{min-height:118px;gap:18px}.module-card:hover,.virtue-card:hover,.resource-card:hover{border-color:#bda477;background:#1e3449;box-shadow:0 9px 20px #00000021}
+.module-info{border-left:1px solid #8f8165}.module-info strong{font-weight:700}.module-info span{color:#bfcbd3}
+.resources-panel{background:#142639;border-color:#425567}.resource-card{background:#1b3043}
+.motto{color:#c1cbd2}.motto::before,.motto::after{opacity:.65}
+.btn{background:#253f54;border:1px solid #536a7b;color:#eef0ed;border-radius:10px;padding:12px 17px;font-size:13px;font-weight:650;transition:background .2s,border-color .2s,transform .2s}
+.btn:hover{background:#2e4a60;border-color:#bfa475;transform:translateY(-1px)}
+.btn.gold{color:#172637;background:#cab084;border-color:#d0b991;box-shadow:none}
+.btn.gold:hover{background:#d9c097;border-color:#e0cba7;box-shadow:0 4px 12px #00000022}
+.btn.subtle{color:#cbd8e0;background:transparent;border-color:#4f6475}
+input,textarea,select,.field,.search-area input,.filter-row input,.filter-row select{background:#0f2234;color:#e9eff2;border-color:#405c70;border-radius:11px}
+textarea::placeholder,input::placeholder{color:#8f9fae;opacity:1}
+input:focus,textarea:focus,select:focus{border-color:#bca174}
+label{color:#d3dce2;font-size:12.8px;font-weight:550}
+.candidate,.integrated-step,.bridge-reflect-card,.bridge-formpanel{min-height:0;overflow-wrap:anywhere}
+.candidate{display:flex;flex-direction:column;align-items:flex-start;gap:14px;min-height:238px;padding:21px 23px;border-color:#405769}
+.candidate strong{line-height:1.27;font-size:24px;min-height:30px}
+.candidate small{color:#b9c8d2;margin-bottom:auto;line-height:1.55}
+.candidate em{color:#d3b584;font-style:normal;margin-top:8px;font-size:12.5px;font-weight:650}
+.candidate.selected{background:#21394d;border:1.5px solid #a58d64;box-shadow:inset 0 0 0 1px #a58d6422}
+.candidate-marker{border-color:#bda47c;color:#c9af82}
+.candidate.selected .candidate-marker{background:#c9ae7f;color:#172638}
+.integrated-grid{gap:16px}.integrated-step{background:#182d40}.integrated-step .integrated-why{color:#d4c6ad}
+.personal-selection-head{margin-bottom:13px}.personal-study-head{margin:8px 0 17px}
+.personal-study-head h3{font-size:clamp(25px,2.8vw,35px);line-height:1.26;margin:8px 0 12px;font-family:Georgia,serif}
+.personal-study-head .personal-source-prompt{background:#122b3d;border-color:#b59a6f;color:#dde6eb}
+.integrated-question{background:#203649;border-color:#6a6c65}
+.integrated-inner .citation-mini{color:#acbbc7}
+.integrated-inner blockquote{color:#eddab6}
+.personal-timeline span{color:#dac49b;border-top-color:#af9875}
+.personal-picker{background:#172c40;border-color:#455b6f}
+.chosen-chip{background:#223b4d;color:#e5d1aa;border-color:#9f8965}
+.selected-count{background:#21384a;border-color:#9f8965;color:#dbc299}
+.mode-dock{background:#152b3e;border-color:#455c6e}
+.mode-dock button{background:#20384b;border-color:#6a665c;color:#e6d1a9}
+.mode-dock button.is-selected{background:#ccb384;color:#162737}
+.bridge-key,.bridge-book{min-height:0}.bridge-book-source{color:#c4d0d8}
+.bridge-reflections,.bridge-work-grid,.bridge-core{align-items:stretch}
+.bridge-reflect-card{display:flex;flex-direction:column}.bridge-reflect-card p{margin-bottom:20px}
+.bridge-reflect-card button{margin-top:auto}
+.diary-entry{background:#192e42;border-color:#42586a}
+.diary-entry time{color:#d1b688}.reflection{background:#253a4d;border-left-color:#bb9b6e}
+/* Registro curricular e origem dos dados */
+.curriculum-panel{background:#172c3d;border-color:#596879;position:relative}
+.curriculum-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.curriculum-header h3{font:700 24px Georgia,serif;margin:7px 0 6px;color:#f0efe8}
+.curriculum-header p{max-width:840px;margin:0 0 10px}
+.curriculum-label{padding:8px 11px;border:1px solid #82775f;color:#dbc59d;font-size:10px;letter-spacing:1.2px;border-radius:7px;white-space:nowrap}
+.curriculum-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 17px;margin-top:10px}
+.curr-field{min-width:0}.curr-field.wide{grid-column:span 2}.curr-field .field{width:100%;max-width:none}
+.curr-textarea{min-height:88px}.curr-field label{margin-top:10px}
+.record-heading{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:10px;flex-wrap:wrap}.record-heading h3{margin:5px 0 0}
+.record-heading .btn{flex-shrink:0}
+.report-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:17px}
+.reports-modal{padding:28px}.reports-modal h2{font:700 clamp(25px,3vw,36px) Georgia,serif;margin:10px 0;color:#f3f0e8}
+.reports-lead{color:#c8d4dc;line-height:1.65;max-width:780px}
+#reportsDialog{max-width:94vw;width:min(900px,94vw);background:#122538;border:1px solid #58697a}
+.report-options article{padding:23px;border:1px solid #526678;border-radius:14px;background:#1b3144;display:flex;flex-direction:column;min-height:265px}
+.report-glyph{font:32px Georgia,serif;color:#cdb48a;margin-bottom:15px}.report-options small{color:#c6ae85;font-size:10px;letter-spacing:1.5px;font-weight:700}
+.report-options h3{font:700 22px Georgia,serif;margin:11px 0}.report-options p{line-height:1.6;color:#cbd6de;font-size:13px;margin-bottom:20px;flex:1}
+.report-options .btn{align-self:flex-start}
+.reports-bottom{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:20px;flex-wrap:wrap}.reports-bottom span{font-size:11px;color:#adc0ce;max-width:360px}
+/* O botão do topo abre a Central de Documentos; os demais módulos continuam disponíveis. */
+.footer{border-top-color:#324759;color:#90a5b5}
+/* Alternativa clara, com a mesma identidade editorial sóbria */
+.light{--bg:#eef1f1;--text:#213549;--muted:#576979;--gold:#9d7a49;--panel:#ffffff;--panel2:#f0f3f6;--stroke:#c2cdd6;--deep:#f1f4f6;color-scheme:light}
+.light .panel,.light .module-card,.light .resource-card,.light .virtue-card,.light .candidate,.light .bridge-key,.light .bridge-book,.light .curriculum-panel,.light .personal-history-entry{background:#fff;border-color:#c8d2d9;color:#243a4d}
+.light .panel p,.light .curriculum-header p{color:#455c6e}.light .curriculum-header h3,.light .report-options h3{color:#243a4d}
+.light .candidate.selected{background:#f6f1e7;border-color:#b39b74}.light .candidate small{color:#516879}.light .candidate em{color:#7a5a2e}
+.light .curriculum-label{color:#80633f;border-color:#bead95}.light .btn.gold{background:#b39363;color:#fff}
+.light #reportsDialog{background:#f8fafb;color:#20394b}.light .reports-modal h2{color:#20394b}.light .reports-lead{color:#526677}
+.light .report-options article{background:#fff;color:#20394b;border-color:#c7d3dc}.light .report-options p{color:#4f6578}
+.light .reports-bottom span{color:#53687a}
+@media(max-width:850px){.curriculum-fields{grid-template-columns:1fr}.curr-field.wide{grid-column:span 1}.report-options{grid-template-columns:1fr}.report-options article{min-height:0}.curriculum-label{display:none}}
+@media(max-width:620px){.reports-modal{padding:18px}.report-options article{padding:18px}.record-heading{align-items:stretch;flex-direction:column}.record-heading .btn{align-self:flex-start}.candidate{min-height:175px}.curriculum-panel{padding:18px}}
+/* Respiro uniforme entre a apresentação e a fundamentação das três virtudes. */
+.integrated-step .integrated-why{min-height:86px;margin-bottom:6px}
+.integrated-inner{margin-top:0;flex:1}
+@media(max-width:720px){.integrated-step .integrated-why{min-height:0;margin-bottom:8px}}

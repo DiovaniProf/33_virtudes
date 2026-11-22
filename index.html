@@ -42,7 +42,7 @@
       <div class="breadcrumb"><span>LABORATÓRIO DE ESTUDOS</span> <b> / </b><strong id="currentPage">Início</strong></div>
       <div class="top-actions"><button class="mode-switch" id="modeSwitch" title="Alternar modalidade">Escolher modalidade</button><button class="info-switch" id="modalitiesInfo" title="Entenda as duas modalidades">Modalidades <span aria-hidden="true">ⓘ</span></button>
         <button class="circle-btn" id="searchToggle" title="Pesquisar virtude" aria-label="Pesquisar virtude">⌕</button>
-        <button class="circle-btn" id="exportBtn" title="Exportar meus registros" aria-label="Exportar meus registros">⇩</button>
+        <button class="circle-btn" id="exportBtn" title="Central de documentos" aria-label="Central de documentos">⇩</button>
         <button class="circle-btn" id="helpBtn" title="Como usar" aria-label="Como usar">?</button>
       </div>
     </header>
@@ -71,8 +71,16 @@
     <p class="note">As recomendações da versão experimental usam relações temáticas locais; a plataforma não lê automaticamente arquivos privados do Google Drive.</p>
   </div>
 </dialog>
-<div class="toast" id="toast" role="status"></div>
-<dialog id="helpDialog"><div class="dialog-body"><button id="closeHelp" class="dialog-close" aria-label="Fechar">×</button><h2>Como explorar a plataforma</h2><p>Escolha entre Professor–Mediador (preparar roteiros e diálogos pedagógicos) e Jornada Pessoal (refletir sobre desafios e receber sugestões de virtudes). A Biblioteca, o Cinema e a Roda continuam disponíveis para aprofundamento.</p><p>Os relatos digitados para análise não saem deste navegador e só são armazenados quando você decide salvar sua jornada. Os registros ficam <b>somente neste navegador</b>, usando armazenamento local, sem criptografia. Evite dados sensíveis ou identificáveis, especialmente em computadores compartilhados. O Painel apresenta participação nas atividades, não uma nota sobre seu caráter. Para salvar uma cópia, use o botão ⇩ no topo.</p><p>Esta é uma experiência educativa, não um instrumento de diagnóstico psicológico.</p><button class="btn gold" id="closeHelp2">Entendi</button></div></dialog>
+<dialog id="reportsDialog" aria-labelledby="reportsTitle"><div class="dialog-body reports-modal">
+<button type="button" class="dialog-close" id="closeReports" aria-label="Fechar central de documentos">×</button>
+<div class="eyebrow">REGISTROS · EXPORTAÇÃO EDITÁVEL</div><h2 id="reportsTitle">Central de documentos</h2>
+<p class="reports-lead">Transforme seus registros em dois documentos Word estruturados, sequenciais e editáveis. São gerados somente os dados já salvos neste navegador.</p>
+<div class="report-options"><article><div class="report-glyph">Ⅰ</div><small>MODALIDADE 01</small><h3>Caderno Progressivo de Reflexão</h3><p>Jornada Pessoal: perguntas, virtudes, sessões, práticas, linha do tempo e novas questões.</p><button class="btn gold" type="button" data-export-docx="personal">Baixar Jornada Pessoal · DOCX ↓</button></article>
+<article><div class="report-glyph">Ⅱ</div><small>MODALIDADE 02</small><h3>Sequência Didática Evolutiva</h3><p>Professor–Mediador: currículo preservado, subsídios, sequência de encontros, observações e replanejamento.</p><button class="btn gold" type="button" data-export-docx="teacher">Baixar Sequência Didática · DOCX ↓</button></article></div>
+<div class="reports-bottom"><button class="btn subtle" id="downloadJsonBackup">Baixar cópia de segurança · JSON</button><span>Os arquivos DOCX são gerados localmente. Não é preciso conexão nem conta externa.</span></div>
+</div></dialog><div class="toast" id="toast" role="status"></div>
+<dialog id="helpDialog"><div class="dialog-body"><button id="closeHelp" class="dialog-close" aria-label="Fechar">×</button><h2>Como explorar a plataforma</h2><p>Escolha entre Professor–Mediador (preparar roteiros e diálogos pedagógicos) e Jornada Pessoal (refletir sobre desafios e receber sugestões de virtudes). A Biblioteca, o Cinema e a Roda continuam disponíveis para aprofundamento.</p><p>Os relatos digitados para análise não saem deste navegador e só são armazenados quando você decide salvar sua jornada. Os registros ficam <b>somente neste navegador</b>, usando armazenamento local, sem criptografia. Evite dados sensíveis ou identificáveis, especialmente em computadores compartilhados. O Painel apresenta participação nas atividades, não uma nota sobre seu caráter. Para baixar os relatórios em DOCX ou uma cópia JSON, use o botão ⇩ no topo.</p><p>Esta é uma experiência educativa, não um instrumento de diagnóstico psicológico.</p><button class="btn gold" id="closeHelp2">Entendi</button></div></dialog>
 <script src="script.js"></script>
+<script src="docx-export.js"></script>
 </body>
 </html>
