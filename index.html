@@ -7,7 +7,22 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="app">
+<section class="welcome" id="welcome" aria-label="Abertura da Jornada das 33 Virtudes">
+  <div class="welcome-image" role="img" aria-label="Livro aberto iluminado, montanhas e símbolos dourados de virtudes sob um céu estrelado"></div>
+  <div class="welcome-tint" aria-hidden="true"></div>
+  <div class="welcome-content">
+    <div class="welcome-eyebrow">LABORATÓRIO DE ESTUDOS · FORMAÇÃO ÉTICA</div>
+    <h1>Jornada das <em>33 Virtudes</em></h1>
+    <p>Estudar, refletir, praticar e aprofundar</p>
+    <div class="welcome-actions">
+      <button type="button" class="welcome-start" id="startJourney">INICIAR <span aria-hidden="true">↗</span></button>
+      <button type="button" class="welcome-understand" id="welcomeModes">Conhecer as duas modalidades</button>
+    </div>
+    <span class="welcome-line" aria-hidden="true"></span>
+    <small>Uma jornada de formação, diálogo e autoconhecimento</small>
+  </div>
+</section>
+<div class="app" id="app" aria-hidden="true">
   <aside class="sidebar" aria-label="Navegação principal">
     <button class="brand" data-go="home" aria-label="Início">✧</button>
     <nav id="sidebarNav">
@@ -16,7 +31,8 @@
       <button class="nav-btn" data-go="wheel" title="Roda"><span>⟳</span><small>Roda</small></button>
       <button class="nav-btn" data-go="cinema" title="Cinema"><span>▷</span><small>Cinema</small></button>
       <button class="nav-btn" data-go="diary" title="Diário"><span>✎</span><small>Diário</small></button>
-      <button class="nav-btn" data-go="bridge" title="Mediação"><span>◇</span><small>Ponte</small></button>
+      <button class="nav-btn" data-go="bridge" data-teacher-only title="Mediação"><span>◇</span><small>Ponte</small></button>
+      <button class="nav-btn" data-go="personal" title="Minha Jornada"><span>✦</span><small>Jornada</small></button>
       <button class="nav-btn" data-go="progress" title="Evolução"><span>▥</span><small>Painel</small></button>
     </nav>
     <button id="themeToggle" class="theme-icon" title="Alternar estética" aria-label="Alternar estética">☼</button>
@@ -24,7 +40,7 @@
   <main class="main" id="main">
     <header class="topbar">
       <div class="breadcrumb"><span>LABORATÓRIO DE ESTUDOS</span> <b> / </b><strong id="currentPage">Início</strong></div>
-      <div class="top-actions">
+      <div class="top-actions"><button class="mode-switch" id="modeSwitch" title="Alternar modalidade">Escolher modalidade</button><button class="info-switch" id="modalitiesInfo" title="Entenda as duas modalidades">Modalidades <span aria-hidden="true">ⓘ</span></button>
         <button class="circle-btn" id="searchToggle" title="Pesquisar virtude" aria-label="Pesquisar virtude">⌕</button>
         <button class="circle-btn" id="exportBtn" title="Exportar meus registros" aria-label="Exportar meus registros">⇩</button>
         <button class="circle-btn" id="helpBtn" title="Como usar" aria-label="Como usar">?</button>
@@ -32,11 +48,31 @@
     </header>
     <div id="searchArea" class="search-area hidden"><input id="globalSearch" placeholder="Pesquisar entre as 33 virtudes…" autocomplete="off" aria-label="Pesquisar virtude"><button class="btn subtle" id="searchClose">Fechar</button></div>
     <section id="screen" aria-live="polite"></section>
-    <footer class="footer">JORNADA DAS 33 VIRTUDES <span>•</span> Protótipo pedagógico independente inspirado nos temas do Guia das Virtudes, de Eduardo Casarotto. Textos e atividades desta tela são originais.</footer>
+    <footer class="footer">JORNADA DAS 33 VIRTUDES <span>•</span> Estudo e formação com base nos temas do Guia das Virtudes, de Eduardo Casarotto. Duas modalidades: Professor–Mediador e Jornada Pessoal. Sínteses, perguntas e práticas são originais; as citações breves da Ponte indicam autor e página.</footer>
   </main>
 </div>
+<dialog id="modalitiesDialog" aria-labelledby="modalitiesTitle">
+  <div class="dialog-body modalities-modal">
+    <button type="button" class="dialog-close" id="closeModalities" aria-label="Fechar informações">×</button>
+    <div class="eyebrow">COMO VOCÊ DESEJA ESTUDAR?</div>
+    <h2 id="modalitiesTitle">Duas modalidades de uso</h2>
+    <div class="modalities-explainer">
+      <article><span aria-hidden="true">▤</span><h3>01 · Professor–Mediador</h3>
+        <p>Espaço de estudo, fundamentação e planejamento. O professor seleciona uma virtude, consulta o livro, examina perguntas e encaminhamentos e organiza um roteiro para utilizar posteriormente no diálogo com estudantes.</p>
+        <p>Os registros formam um <strong>caderno de preparação do professor</strong>, não um formulário para os estudantes.</p>
+        <button class="btn gold" type="button" data-dialog-mode="teacher">Entrar como professor</button>
+      </article>
+      <article><span aria-hidden="true">✦</span><h3>02 · Jornada Pessoal</h3>
+        <p>Espaço autodidático de autoconhecimento. Você descreve uma pergunta, desafio ou habilidade que deseja aprimorar; a plataforma sugere virtudes relacionadas, apresenta fundamentos e propõe pequenas experiências.</p>
+        <p>O objetivo é acompanhar um processo de <strong>aprendizagem pessoal</strong>, sem classificar o caráter nem diagnosticar o usuário.</p>
+        <button class="btn gold" type="button" data-dialog-mode="personal">Iniciar minha jornada</button>
+      </article>
+    </div>
+    <p class="note">As recomendações da versão experimental usam relações temáticas locais; a plataforma não lê automaticamente arquivos privados do Google Drive.</p>
+  </div>
+</dialog>
 <div class="toast" id="toast" role="status"></div>
-<dialog id="helpDialog"><div class="dialog-body"><button id="closeHelp" class="dialog-close" aria-label="Fechar">×</button><h2>Como explorar a plataforma</h2><p>Comece pela Biblioteca, escolha uma virtude e estude as ideias e perguntas. Use a Roda para sortear uma reflexão, o Cinema para analisar escolhas, o Diário para registrar experiências e a Ponte para organizar mediações.</p><p>Seus registros ficam <b>somente neste navegador</b>, usando armazenamento local. O Painel apresenta participação nas atividades, não uma nota sobre seu caráter. Para salvar uma cópia, use o botão ⇩ no topo.</p><p>Esta é uma experiência educativa, não um instrumento de diagnóstico psicológico.</p><button class="btn gold" id="closeHelp2">Entendi</button></div></dialog>
+<dialog id="helpDialog"><div class="dialog-body"><button id="closeHelp" class="dialog-close" aria-label="Fechar">×</button><h2>Como explorar a plataforma</h2><p>Escolha entre Professor–Mediador (preparar roteiros e diálogos pedagógicos) e Jornada Pessoal (refletir sobre desafios e receber sugestões de virtudes). A Biblioteca, o Cinema e a Roda continuam disponíveis para aprofundamento.</p><p>Os relatos digitados para análise não saem deste navegador e só são armazenados quando você decide salvar sua jornada. Os registros ficam <b>somente neste navegador</b>, usando armazenamento local, sem criptografia. Evite dados sensíveis ou identificáveis, especialmente em computadores compartilhados. O Painel apresenta participação nas atividades, não uma nota sobre seu caráter. Para salvar uma cópia, use o botão ⇩ no topo.</p><p>Esta é uma experiência educativa, não um instrumento de diagnóstico psicológico.</p><button class="btn gold" id="closeHelp2">Entendi</button></div></dialog>
 <script src="script.js"></script>
 </body>
 </html>
