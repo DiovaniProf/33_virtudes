@@ -137,11 +137,12 @@ function curriculumAssistantPanel(){
  const options=V.map(v=>`<label class="assist-voption ${d.selectedIds.includes(v.id)?'checked':''}"><input type="checkbox" data-assist-virtue="${v.id}" ${d.selectedIds.includes(v.id)?'checked':''}><span>${assEsc(v.name)}</span></label>`).join('');
  const objectives=d.objectives.length?d.objectives.map((o,i)=>`<article class="assist-objective-card"><div class="assist-objective-head"><strong>${String(i+1).padStart(2,'0')} · ${assEsc(V[o.virtueId-1]?.name||'Virtude')}</strong><label class="assist-approval"><input type="checkbox" data-assist-approve="${i}" ${o.approved?'checked':''}> Aprovar</label></div><label for="assist_objective_${i}" class="assist-muted">Objetivo complementar, editável</label><textarea id="assist_objective_${i}" data-assist-objective="${i}" rows="3">${assEsc(o.text)}</textarea></article>`).join(''):'<p class="assist-muted">Após escolher as virtudes, clique em “Gerar objetivos complementares”.</p>';
  const countApproved=d.objectives.filter(x=>x.approved&&x.text.trim()).length;
+ const importStatus=d.error?"error":d.progress.startsWith("Texto extraído")?"success":d.progress?"working":"idle";
  return `<section class="panel curriculum-assistant" id="curriculumAssistant" aria-labelledby="curriculumAssistTitle">
   <div class="curriculum-header"><div><div class="eyebrow">02 · INTEGRAÇÃO CURRICULAR E VIRTUDES · OPCIONAL</div><h3 id="curriculumAssistTitle">Sua aula em diálogo com as 33 virtudes</h3><p>Importe um material e construa objetivos complementares. O currículo informado acima permanece inalterado; apenas sugestões aprovadas entram na sequência didática.</p></div><span class="curriculum-label">REVISÃO DOCENTE</span></div>
   <div class="assist-steps"><span>01 · Material</span><span>02 · Virtudes</span><span>03 · Objetivos</span><span>04 · Salvar</span></div>
-  <div class="assist-upload-zone" id="assistDropZone"><span class="assist-upload-icon" aria-hidden="true">⇧</span><label for="assistFile">Selecionar ou arrastar material da aula</label><input id="assistFile" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation"><small>PDF, DOCX ou PPTX · até 20 MB · análise no navegador</small>${d.fileName?`<p class="assist-file-name">Arquivo: <b>${assEsc(d.fileName)}</b> · ${assEsc(d.format||'')}${d.pages?' · '+d.pages+' página(s)':''}${d.slides?' · '+d.slides+' slide(s)':''}</p>`:''}</div>
-  <p class="assist-status" id="assistStatus" role="status">${assEsc(d.progress||d.error||'Também é possível colar um texto curricular diretamente no campo de revisão. Os arquivos originais não ficam armazenados.')}</p>
+  <div class="assist-upload-zone" id="assistDropZone"><span class="assist-upload-icon" aria-hidden="true">⇧</span><label for="assistFile">Selecionar ou arrastar material da aula</label><input id="assistFile" type="file" accept=".pdf,.docx,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation"><small>PDF, DOCX ou PPTX · até 60 MB · processamento no navegador</small>${d.fileName?`<p class="assist-file-name">Arquivo: <b>${assEsc(d.fileName)}</b> · ${assEsc(d.format||'')}${d.pages?' · '+d.pages+' página(s)':''}${d.slides?' · '+d.slides+' slide(s)':''}</p>`:''}</div>
+  <p class="assist-status assist-status--${importStatus}" id="assistStatus" role="status" aria-live="polite">${assEsc(d.error||d.progress||'Selecione um arquivo ou cole o texto curricular para começar.')}</p>${d.warning?`<p class="assist-warning">⚠ ${assEsc(d.warning)}</p>`:""}<div class="assist-upload-guide"><small>Após selecionar, confira o nome do arquivo e a mensagem de leitura. A prévia aparecerá logo abaixo em “Texto extraído / revisão”.</small></div>
   <details class="assist-source-editor" ${d.rawText?'open':''}><summary>Texto extraído / revisão do professor</summary>
    <p class="assist-muted">Confira e corrija o texto. A identificação de conceitos é temática e pode falhar em materiais complexos. PDF digitalizado requer texto selecionável ou transcrição manual.</p>
    <textarea id="assistText" rows="6" placeholder="Texto da aula extraído do arquivo, ou cole aqui seu material curricular...">${assEsc(d.rawText)}</textarea>
@@ -175,17 +176,32 @@ function assistantGather(){
  if(el('curriculumAssistant'))el('curriculumAssistant').querySelectorAll('[data-assist-objective]').forEach(ta=>{const item=d.objectives[+ta.dataset.assistObjective];if(item)item.text=ta.value.trim()});
 }
 function assistantRefresh(){const section=el('curriculumAssistant');if(section)section.outerHTML=curriculumAssistantPanel();}
+let assistImportSequence=0;
 async function assistantImport(file){
  if(!file)return;
- assistantGather();const d=assistDraft;d.progress='Lendo arquivo selecionado…';d.error='';if(el('assistStatus'))el('assistStatus').textContent=d.progress;
+ const sequence=++assistImportSequence;
+ assistantGather();const d=assistDraft;
+ d.fileName=file.name;d.format=(file.name.split('.').pop()||'').toUpperCase();d.size=file.size;
+ d.progress=`Arquivo recebido: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB). Extraindo texto…`;
+ d.error='';d.warning='';
+ assistantRefresh();
+ const updateProgress=msg=>{if(sequence!==assistImportSequence)return;d.progress=msg;const status=el('assistStatus');if(status){status.textContent=msg;status.className='assist-status assist-status--working'}};
  try{
-   const data=await ImportadorAulas.readFile(file,msg=>{d.progress=msg;if(el('assistStatus'))el('assistStatus').textContent=msg});
+   if(!window.ImportadorAulas)throw Error('Módulo de importação indisponível. Reabra o arquivo HTML completo ou extraia todo o pacote ZIP.');
+   const data=await window.ImportadorAulas.readFile(file,updateProgress);
+   if(sequence!==assistImportSequence)return;
    d.fileName=data.name;d.format=data.format;d.size=data.size;d.pages=data.pages;d.slides=data.slides;d.readAt=data.readAt;d.truncated=data.truncated;
+   d.warning=data.warning||'';
    d.rawText=data.text;d.title='';d.topic='';d.selectedIds=[];d.objectives=[];d.question='';d.activity='';
-   const summary=ImportadorAulas.scanSummary(d.rawText,'');d.title=summary.title;d.topic=summary.topic;d.suggestedIds=summary.suggestedIds;d.themes=summary.matchedThemes;d.confidence=summary.topicScore;d.existingObjectives=summary.objectives;
-   d.progress=`Texto identificado: ${data.totalChars.toLocaleString('pt-BR')} caracteres.${data.truncated?' Prévia limitada a 85 mil caracteres.':''} Confira e corrija antes de gerar sugestões.`;
-   assistantRefresh();el('assistText')?.focus();toast('Material importado. Revise o texto e prossiga para selecionar as virtudes.');
- }catch(err){d.fileName=file.name;d.error=err.message+' Você pode colar o texto na área de revisão.';d.progress='';assistantRefresh();toast('Não foi possível extrair o texto: revise o arquivo ou cole o conteúdo.');}
+   const summary=window.ImportadorAulas.scanSummary(d.rawText,'');d.title=summary.title;d.topic=summary.topic;d.suggestedIds=summary.suggestedIds;d.themes=summary.matchedThemes;d.confidence=summary.topicScore;d.existingObjectives=summary.objectives;
+   d.progress=`Texto extraído com sucesso: ${data.totalChars.toLocaleString('pt-BR')} caracteres (${data.method}).${data.truncated?' Prévia limitada a 120 mil caracteres.':''} Abra a revisão e confirme antes de gerar sugestões.`;
+   assistantRefresh();el('assistText')?.focus();toast('Upload reconhecido. Texto extraído e disponível para revisão.');
+ }catch(err){
+   if(sequence!==assistImportSequence)return;
+   d.error=`Arquivo reconhecido: ${file.name}. Não foi possível extrair o texto. Motivo: ${err?.message||'erro desconhecido'}`;
+   d.progress='';d.warning='';assistantRefresh();toast('Não foi possível ler o conteúdo. Veja o motivo indicado abaixo do upload.');
+   console.warn('Erro na importação de aula',err);
+ }
 }
 function assistantAnalyze(){assistantGather();const d=assistDraft;const original=readCurriculum();
  const source=[d.rawText,original.contents,original.title,original.objectives].filter(Boolean).join('\n');
@@ -415,7 +431,7 @@ function doClick(e){
  }if(e.target.id==='saveBridge'){const facts=el('bridgeFacts').value.trim(),views=el('bridgeViews').value.trim(),question=el('bridgeQuestion').value.trim(),action=el('bridgeAction').value.trim(),summary=el('bridgeTeacherNote').value.trim(),followUp=el('bridgeFollowUp').value.trim();if(!facts||!views||!question||!action){toast('Preencha os campos principais do roteiro do professor.');return}recordCurriculumSnapshot();state.mediation.push({id:Date.now().toString(36),createdAt:new Date().toISOString(),date:new Date().toLocaleString('pt-BR'),virtue:(V[+el('bridgeVirtue').value-1]?.name||el('bridgeVirtue').value),facts,views,question,action,summary,followUp,curriculum:{...state.teacherCurriculum}});save();bridge();toast('Nova etapa docente salva; currículo e registros anteriores preservados.')}}
 screen.addEventListener('click',doClick);
 screen.addEventListener('change',async e=>{
- if(e.target.id==='assistFile'){await assistantImport(e.target.files[0]);return}
+ if(e.target.id==='assistFile'){const file=e.target.files?.[0];e.target.value='';if(file)await assistantImport(file);return}
  if(e.target.name==='assistStrategy'){assistantGather();assistDraft.strategy=e.target.value;assistantRefresh();return}
  const vx=e.target.closest('[data-assist-virtue]');if(vx){assistantGather();const id=+vx.dataset.assistVirtue;
    if(vx.checked&&!assistDraft.selectedIds.includes(id)){

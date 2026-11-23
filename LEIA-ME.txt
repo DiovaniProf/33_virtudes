@@ -1,47 +1,34 @@
-JORNADA DAS 33 VIRTUDES — VERSÃO 8.0
-==================================
+JORNADA DAS 33 VIRTUDES — V9 · CORREÇÃO DE IMPORTAÇÕES
+======================================================
 
-COMO ABRIR
-- Abra index.html no navegador (ou utilize o HTML único fornecido à parte).
-- Na abertura, clique em INICIAR e escolha Professor–Mediador.
-- Acesse Ponte de Mediação > Currículo em Primeiro Plano.
-- Role até a nova seção “Integração Curricular e Virtudes”.
+INICIAR
+Abra index.html no Chrome/Edge ou publique o conteúdo integral desta pasta em GitHub Pages.
+NÃO abra o index.html de dentro do ZIP sem extrair os demais arquivos.
 
-ASSISTENTE CURRICULAR
-1. Importe uma aula .docx, .pptx ou .pdf (até 20 MB), ou cole o texto.
-2. Confira e corrija o texto lido no campo de revisão.
-3. Confirme o tema central do planejamento.
-4. Solicite sugestões ou selecione manualmente até 3 virtudes.
-5. Gere e revise objetivos; marque explicitamente os aprovados.
-6. Salve a complementação. Ela entra no histórico e no relatório DOCX docente.
+MODO PROFESSOR–MEDIADOR > PONTE DE MEDIAÇÃO > ETAPA 02.
+1. Selecione ou arraste um arquivo de aula PDF, DOCX ou PPTX (até 60 MB).
+2. Veja a mensagem "Arquivo recebido" enquanto o programa lê o documento.
+3. Quando aparecer "Texto extraído com sucesso", confira a prévia e revise-a.
+4. Escolha até 3 virtudes, gere os objetivos e aprove os que fizerem sentido.
+5. Salve a complementação curricular e use o botão DOCX para exportar.
 
-CAPACIDADES E LIMITAÇÕES
-- DOCX/PPTX: leitura no próprio navegador, sem envio a serviços externos.
-- PDF: utiliza PDF.js carregado via CDN quando houver internet; PDFs digitalizados
-  sem camada de texto precisarão ser transcritos. Caso a biblioteca não possa ser
-  carregada, cole o texto no campo de revisão.
-- As recomendações usam correspondências temáticas e modelos predefinidos.
-  NÃO há IA generativa nem análise semântica profunda de documentos.
-- Nenhuma habilidade da BNCC é inventada; o currículo original continua
-  registrado em seção separada.
-- Os documentos importados NÃO são enviados a um servidor nem gravados
-  integralmente no armazenamento do navegador. Só metadados, um pequeno
-  extrato e os objetivos aprovados são salvos, para documentação do percurso.
-- Os registros ficam no armazenamento local do navegador; em computadores
-  compartilhados evite dados sensíveis. Faça backup JSON pela Central de Documentos.
-- O relatório Word é gerado sem conexão, a partir das experiências salvas.
+A importação DOCX e PPTX funciona inteiramente offline com a biblioteca JSZip
+incluída no pacote. Para PDFs, a ferramenta primeiro tenta utilizar PDF.js
+através da internet. Sem conexão, uma leitura simplificada de PDFs textuais
+comuns é tentada. Essa leitura não é equivalente ao PDF.js: textos com fontes
+codificadas, documentos escaneados e alguns layouts podem não ser reconhecidos
+ou preservados. Copie o texto para o campo de revisão nesses casos.
+
+Se o upload falhar, a plataforma apresenta nome do arquivo e motivo detalhado;
+não pressupõe silenciosamente que nenhum arquivo foi selecionado.
+
+O documento original NÃO é enviado para servidores; somente os registros
+explicitamente aprovados pelo professor são salvos localmente.
+
+MODELOS DE RELATÓRIO: "Jornada Pessoal" e "Sequência Didática Evolutiva".
+O sistema preserva o núcleo curricular e complementa apenas com propostas
+aprovadas, antes da geração do DOCX.
 
 ARQUIVOS
-- index.html — página principal
-- style.css — identidade visual premium
-- script.js — navegação e registros
-- importador-aulas.js — leitura local e propostas pedagógicas
-- vendor/jszip.min.js — leitura de DOCX/PPTX (biblioteca JSZip, licença MIT)
-- docx-export.js — gerador DOCX editável
-- assets/ — imagens da plataforma
-- modelos/ — modelos de referência DOCX
-
-CRÉDITOS
-Referência didática: Eduardo Casarotto, Guia das Virtudes — Livro do Professor
-(2024). As frases-chave, perguntas e objetivos complementares são formulações
-pedagógicas da plataforma e não transcrições integrais da obra.
+index.html, style.css, script.js, importador-aulas.js, docx-export.js,
+vendor/jszip.min.js, assets/*.webp|png e modelos/*.docx.

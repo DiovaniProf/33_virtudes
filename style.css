@@ -294,3 +294,16 @@ label{color:#d3dce2;font-size:12.8px;font-weight:550}
 .assist-extracted ul{padding-left:19px;color:#d5e0e5;font-size:12px;line-height:1.65}
 .assist-extracted li+li{margin-top:6px}
 .light .assist-extracted{background:#f0f3f5}.light .assist-extracted strong{color:#354a59}.light .assist-extracted ul{color:#344f64}
+
+/* Importação v9 — estados visíveis de processamento e alertas */
+.assist-status{padding:13px 16px!important; border-radius:9px; border:1px solid #40566b; background:#102438; font-size:13px!important; line-height:1.6!important;overflow-wrap:anywhere}
+.assist-status--working{border-color:#b79b64;background:#24364a;color:#f7e4bb!important}
+.assist-status--success{border-color:#477b72;background:#153c3f;color:#e0f4ed!important}
+.assist-status--error{border-color:#a66c6c;background:#432b35;color:#ffdddd!important}
+.assist-warning{background:#423b2b;border-left:3px solid #d9bb77;color:#ffe8be!important;padding:12px 15px;border-radius:8px;font-size:13px;line-height:1.5}
+.assist-upload-guide{margin:-9px 0 15px;color:#b4c7d4;font-size:12px}
+.assist-file-name{overflow-wrap:anywhere}
+.light .assist-status--working{background:#fff5df;color:#67501d!important}
+.light .assist-status--success{background:#e5f5ef;color:#245647!important}
+.light .assist-status--error{background:#ffeded;color:#832e38!important}
+.light .assist-warning{background:#fef1d2;color:#684f13!important}
